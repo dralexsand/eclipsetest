@@ -13,8 +13,9 @@ class Article extends Model
 
     protected $guarded = [];
 
-    public function tag()
+    public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'article_tag');
+        return $this
+            ->belongsToMany(Tag::class, 'article_tags');
     }
 }

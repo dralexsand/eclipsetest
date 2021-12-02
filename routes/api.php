@@ -19,4 +19,6 @@ use Illuminate\Support\Facades\Route;
     return $request->user();
 });*/
 
-Route::apiResource('articles', [ArticlesController::class]);
+Route::apiResource('articles', 'App\Http\Controllers\Api\v1\ArticlesController');
+
+Route::apiResource('tags', 'App\Http\Controllers\Api\v1\TagsController');

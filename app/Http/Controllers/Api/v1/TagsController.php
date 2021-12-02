@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Article;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
-class ArticlesController extends Controller
+class TagsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class ArticlesController extends Controller
      */
     public function index()
     {
-        return Article::with('tags')
+        return Tag::with('articles')
             ->get();
     }
 
@@ -48,7 +48,7 @@ class ArticlesController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -61,7 +61,7 @@ class ArticlesController extends Controller
      */
     public function destroy(int $id)
     {
-        $article = Article::findOrFail($id);
-        $article->tags()->detach();
+        $tag = Tag::findOrFail($id);
+        $tag->articles()->detach();
     }
 }

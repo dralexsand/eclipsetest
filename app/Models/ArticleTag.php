@@ -11,6 +11,8 @@ class ArticleTag extends Model
 {
     use HasFactory;
 
+    protected $table = 'article_tags';
+
     public $timestamps = false;
 
     protected $guarded = [];
