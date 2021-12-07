@@ -4,19 +4,26 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tag;
+use App\Services\ArticleTagService;
 use Illuminate\Http\Request;
 
 class TagsController extends Controller
 {
+    protected ArticleTagService $service;
+
+    public function __construct()
+    {
+        $this->service = new ArticleTagService();
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Http\Response
      */
     public function index()
     {
-        return Tag::with('articles')
-            ->get();
+        return $this->service->getAllTagsWithArticles();
     }
 
     /**
@@ -34,11 +41,11 @@ class TagsController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|\Illuminate\Http\Response|object
      */
-    public function show($id)
+    public function show(int $id)
     {
-        //
+        return $this->service->showTag($id);
     }
 
     /**
@@ -48,9 +55,16 @@ class TagsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
-        //
+        if ($request->get('name') && $request->get('name') !== '') {
+            $tag = $this->service->tag->where('id', $id)->first();
+            $tag->update([
+                'name' => $request->get('name')
+            ]);
+        }
+
+        return $this->service->showTag($id);
     }
 
     /**
@@ -61,7 +75,6 @@ class TagsController extends Controller
      */
     public function destroy(int $id)
     {
-        $tag = Tag::findOrFail($id);
-        $tag->articles()->detach();
+        return $this->service->deleteTag($id);
     }
 }

@@ -3,20 +3,31 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\ApiRequest;
+use App\Http\Requests\Article\CreateArticleRequest;
+use App\Http\Requests\Article\StoreArticleRequest;
+use App\Http\Requests\Article\UpdateArticleRequest;
 use App\Models\Article;
+use App\Services\ArticleTagService;
 use Illuminate\Http\Request;
 
 class ArticlesController extends Controller
 {
+    protected ArticleTagService $service;
+
+    public function __construct()
+    {
+        $this->service = new ArticleTagService();
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Http\Response
      */
     public function index()
     {
-        return Article::with('tags')
-            ->get();
+        return $this->service->getAllArticlesWithTags();
     }
 
     /**
@@ -25,9 +36,9 @@ class ArticlesController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreArticleRequest $request)
     {
-        //
+        return $this->service->createArticle($request);
     }
 
     /**
@@ -36,32 +47,35 @@ class ArticlesController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
-        //
+        return $this->service->showArticle($id);
     }
 
+
     /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return array|\Illuminate\Http\JsonResponse
      */
     public function update(Request $request, int $id)
     {
-        //
+        $validate_data = ApiRequest::articleRequestUpdate($request);
+
+        return $validate_data['status'] === 'error' ? $validate_data : $this->service->updateArticle(
+            $validate_data['data'],
+            $id
+        );
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(int $id)
     {
-        $article = Article::findOrFail($id);
-        $article->tags()->detach();
+        return $this->service->deleteArticle($id);
     }
 }

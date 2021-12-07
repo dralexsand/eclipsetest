@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\v1\TagsController;
 use App\Http\Controllers\Api\v1\ArticlesController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,10 +15,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/*Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});*/
+Route::group(['middleware' => ['throttle:20,1']], function () {
+    Route::apiResource('articles', ArticlesController::class);
 
-Route::apiResource('articles', 'App\Http\Controllers\Api\v1\ArticlesController');
+    Route::get('/tags', [TagsController::class, 'index']);
+    Route::get('/tags/{id}', [TagsController::class, 'show']);
+    Route::put('/tags/{id}', [TagsController::class, 'update']);
+    Route::delete('/tags/{id}', [TagsController::class, 'destroy']);
+    //Route::apiResource('tags', TagsController::class);
+});
 
-Route::apiResource('tags', 'App\Http\Controllers\Api\v1\TagsController');
+
+
