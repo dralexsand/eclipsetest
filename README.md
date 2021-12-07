@@ -69,13 +69,13 @@ or
 
 ### All methods:
 
-POST      | api/v1/articles
-GET|HEAD  | api/v1/articles/{article}
-PUT|PATCH | api/v1/articles/{article}
-DELETE    | api/v1/articles/{article}
+##### POST      | api/v1/articles
+##### GET|HEAD  | api/v1/articles/{article}
+##### PUT|PATCH | api/v1/articles/{article}
+##### DELETE    | api/v1/articles/{article}
 
-GET|HEAD  | api/v1/tags
-GET|HEAD  | api/v1/tags/{id}
-PUT       | api/v1/tags/{id}
-DELETE    | api/v1/tags/{id}  
+##### GET|HEAD  | api/v1/tags
+##### GET|HEAD  | api/v1/tags/{id}
+##### PUT       | api/v1/tags/{id}
+##### DELETE    | api/v1/tags/{id}  
 
