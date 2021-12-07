@@ -49,7 +49,7 @@ Response:
 or
 
 ```
-"status": "SUCCESS",
+"status": "ERROR",
 "message": "Error request"
 ```
 
